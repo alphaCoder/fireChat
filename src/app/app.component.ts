@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AngularFire } from 'angularfire2';
+import { AuthService } from './security/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +8,5 @@ import { AngularFire } from 'angularfire2';
 })
 export class AppComponent {
   title = 'app works!';
-  constructor(private af : AngularFire) {}
-  
-  logout() {
-    this.af.auth.logout();
-  }
+  constructor(private auth : AuthService) {}
 }
