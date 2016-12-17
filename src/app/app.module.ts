@@ -8,13 +8,14 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { TopNavComponent } from './layout/top-nav/top-nav.component';
 import { LoginComponent } from './security/login.component';
+import { UserService } from './security/user.service';
 import { AuthGuard } from './security/auth-guard.service';
 import { AuthService } from './security/auth.service';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 const myFirebaseAuthConfig = {
   provider: AuthProviders.Google,
-  method: AuthMethods.Redirect
+  method: AuthMethods.Popup
 }
 
 var firebaseConfig = {
@@ -44,7 +45,7 @@ const routesModule = RouterModule.forRoot([
     AngularFireModule.initializeApp(firebaseConfig, myFirebaseAuthConfig),
     HttpModule
   ],
-  providers: [AuthGuard, AuthService],
+  providers: [AuthGuard, AuthService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,24 +1,20 @@
 import { Injectable } from '@angular/core';
-import { AngularFire, AngularFireAuth } from 'angularfire2';
+import { AngularFire, AngularFireAuth, AuthProviders } from 'angularfire2';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class UserService {
-    private isLoggedIn = false;
-    private email: string = null;
-    private displayName: string = null;
-    private uid: string = null;
-
-    constructor(private af: AngularFire) { }
+    //todo: maybe delete this service and only rely on auth service
+    constructor(private af: AngularFire, private router: Router) { }
     public login() {
-        if (!this.isLoggedIn) {
-            this.af.auth.login().then(user => {
-                this.displayName = user.auth.displayName;
-                this.email = user.auth.email;
-                this.uid = user.auth.uid;
-                this.isLoggedIn = true;
-            }).catch(e => {
-                this.isLoggedIn = false;
-            });
-        }
+        this.attemptAutoLogin(); //todo: deal with other logins here        
+    }
+
+    public attemptAutoLogin() {
+        this.af.auth.login(AuthProviders.Google).then(user => {
+            this.router.navigate(['']);
+        }).catch(e => {
+            this.router.navigate(['login']);
+        });
     }
 }

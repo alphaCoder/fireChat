@@ -10,11 +10,6 @@ import { FirebaseAuthState } from 'angularfire2';
 export class TopNavComponent {
   private displayName: string;
   constructor(private auth: AuthService, private router: Router) {
-    this.auth.auth$.subscribe((state: FirebaseAuthState) => {
-      if (state) {
-        this.displayName = state.google.displayName;
-      }
-    });
   }
 
   logout() {

@@ -9,26 +9,13 @@ import {
 } from '@angular/router';
 
 import { AuthService } from './auth.service';
-
+import { UserService } from './user.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
-    private isAuthenticated:Boolean
-  constructor(private auth: AuthService, private router: Router) {}
+  private isAuthenticated: Boolean
+  constructor(private auth: AuthService, private router: Router, private user: UserService) { }
 
-    canActivate():boolean {
-      return this.auth.authenticated;
-    }
-  //  canActivate(): Observable<boolean> {
-  //   return this.auth.auth$
-  //     .take(1)
-  //     .map(authState => !!authState)
-  //     .do(authenticated => {
-  //       if (!authenticated) {
-  //         console.log('not authenticated');
-  //         this.router.navigate(['login']);
-  //       }
-  //       else
-  //       this.router.navigate(['']);
-  //     });
-  // }
+  canActivate(): boolean {
+    return this.auth.authenticated;
+  }
 }
