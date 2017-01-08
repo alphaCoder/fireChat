@@ -9,6 +9,6 @@ import { UserService } from './security/user.service';
 })
 export class AppComponent {
   constructor(private auth : AuthService, private user:UserService) {
-    user.attemptAutoLogin();
+  //  user.attemptAutoLogin();
   }
 }

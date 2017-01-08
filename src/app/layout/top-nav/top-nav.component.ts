@@ -14,6 +14,7 @@ export class TopNavComponent {
 
   logout() {
     this.auth.signOut();
+    this.router.navigate(['login']);
     this.auth.auth$.subscribe((state: any) => {
       if (!state) {
         this.router.navigate(['login']);

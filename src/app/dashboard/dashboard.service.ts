@@ -13,17 +13,21 @@ export class DashboardService {
       console.log("friends");
       console.log(friends);
       this.friends = friends;
+          this.friends.forEach(friend => {
+         af.database.object(`presence/${friend.id}/status`).subscribe(val =>{
+          friend.status = val.$value == null ? 1 : val.$value;
+          console.log("status changed", val);
+          console.log(friend);
+        });
+      });
     })
+  
     this.firendsInvitationRef.subscribe(friends => {
       console.log("already invited friends");
       console.log(JSON.stringify(friends));
     });
 
-     this.auth.auth$.subscribe((state: any) => {
-      if (state) {
-       
-      }
-    });
+     
   }
   public inviteUser(email:string) {
     //todo: check if the invitation already sent
