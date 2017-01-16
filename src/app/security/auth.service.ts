@@ -32,7 +32,7 @@ export class AuthService {
         pp.$ref.onDisconnect().set(Status.Offline);
         let sessionRef = af.database.list(`presence/${state.uid}/session`);
         sessionRef.push({"loggedInAt" :firebase.database.ServerValue.TIMESTAMP });
-        //userRef.$ref.ref.onDisconnect().update()
+        
         userRef.$ref.ref.child(`${state.uid}`).on('value', function (snapshot) {
           this.user = snapshot.val();
         })

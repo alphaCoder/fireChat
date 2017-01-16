@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 import { RouterModule } from '@angular/router';
 import {MomentModule} from 'angular2-moment';
+import { PushNotificationsModule } from 'angular2-notifications';
 
 import { AppComponent } from './app.component';
 import { TopNavComponent } from './layout/top-nav/top-nav.component';
@@ -21,7 +22,7 @@ import { ChatBoxService } from './chat-box/chat-box.service';
 
 const myFirebaseAuthConfig = {
   provider: AuthProviders.Google,
-  method: AuthMethods.Popup
+  method: AuthMethods.Redirect
 }
 
 var firebaseConfig = {
@@ -33,8 +34,8 @@ var firebaseConfig = {
 
 const routesModule = RouterModule.forRoot([
   { path: 'login', component: LoginComponent, pathMatch: 'full', canActivate: [UnauthGuard] },
-  { path: '', redirectTo:'dashboard', pathMatch: 'full', canActivate: [AuthGuard] },
-  { path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate: [AuthGuard] }
+  { path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+  { path: '', redirectTo:'dashboard', pathMatch: 'full', canActivate: [AuthGuard] }
   
   /* define app module routes here, e.g., to lazily load a module
      (do not place feature module routes here, use an own -routing.module.ts in the feature instead)
@@ -53,9 +54,12 @@ const routesModule = RouterModule.forRoot([
     routesModule,
     AngularFireModule.initializeApp(firebaseConfig, myFirebaseAuthConfig),
     HttpModule,
-    MomentModule
+    MomentModule,
+    PushNotificationsModule
   ],
   providers: [AuthGuard, AuthService, UserService, ChatBoxService, DashboardService, UnauthGuard],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  
+ }

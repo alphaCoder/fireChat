@@ -14,7 +14,7 @@
         <abbr class="timestamp">October 8th, 2015</abbr>
       </div>
       <!-- Message. Default to the left -->
-      <div class="xdirect-chat-msg" *ngFor="let message of chat.messages">
+      <div class="xdirect-chat-msg" *ngFor="let message of chat.messagesRef | async">
         <div class="direct-chat-info clearfix">
           <span class="direct-chat-name pull-left">{{chat.users[message.from].displayName}}</span>
         </div>
@@ -35,10 +35,14 @@
   </div>
   <div class="popup-messages-footer">
     <!--<textarea id="status_message" placeholder="Type a message..." rows="10" cols="40" name="message"></textarea>-->
+    <div *ngIf="friend.typing">
+      {{friend.displayName}} is typing
+    </div>
     <div class="input-group">
-        <input type="text" class="form-control" [(ngModel)] ="message" placeholder="Type a message" (keyup.enter)="send()"/>
+        <input type="text" class="form-control" [(ngModel)] ="message" (blur)="setFocus(false)" (focus) = "setFocus(true)" placeholder="Type a message" (keyup.enter)="send()"/>
         <span class="input-group-addon" (click)="send()" style="cursor:pointer" ><i class="glyphicon glyphicon-send"></i></span>
     </div>
+    
     <!--<div class="btn-footer">
       <button class="bg_none"><i class="glyphicon glyphicon-film"></i> </button>
       <button class="bg_none"><i class="glyphicon glyphicon-camera"></i> </button>
