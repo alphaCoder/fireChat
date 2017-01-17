@@ -14,7 +14,7 @@
         <abbr class="timestamp">October 8th, 2015</abbr>
       </div>
       <!-- Message. Default to the left -->
-      <div class="xdirect-chat-msg" *ngFor="let message of chat.messagesRef | async">
+      <div class="xdirect-chat-msg" *ngFor="let message of chat.messages">
         <div class="direct-chat-info clearfix">
           <span class="direct-chat-name pull-left">{{chat.users[message.from].displayName}}</span>
         </div>
@@ -22,7 +22,7 @@
         <img alt="message user image" [src]="chat.users[message.from].photoUrl" class="direct-chat-img">
         <!-- /.direct-chat-img -->
         <div class="direct-chat-text">
-         {{message.message}}
+        <span [innerHTML]= "message.message | linky"></span>
         </div>
         <div class="direct-chat-info clearfix">
           <span class="direct-chat-timestamp pull-right">{{message.time| date:'yyyy-MM-dd HH:mm:ss Z' | amTimeAgo}}</span>

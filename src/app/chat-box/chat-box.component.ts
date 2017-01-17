@@ -18,12 +18,12 @@ export class ChatBoxComponent implements OnInit {
   private friendTypingRef : FirebaseObjectObservable<any> = null;
   
   constructor(private chat: ChatBoxService, private elementRef: ElementRef, private auth:AuthService, private af:AngularFire) {
+    
     Observable.fromEvent(elementRef.nativeElement, 'keyup')
       .map(() => this.message)
       .debounceTime(250)
       .distinctUntilChanged()
       .subscribe(x => {
-        console.log('..subscribe keyup');
         if (x.length == 0) {
           this.chat.setTyping(false);
         }
@@ -31,19 +31,10 @@ export class ChatBoxComponent implements OnInit {
           this.chat.setTyping(true)
         }
       });
-      Observable.fromEvent(window, 'blur').subscribe(val =>{
-       this.chat.windowHasFocus = false;
-       console.log("from event blur");
-     })
-     Observable.fromEvent(window, 'focus').subscribe(val =>{
-       this.chat.windowHasFocus = true;
-       console.log("from event focus Observable");
-     })
+    
   }
 
   ngOnInit() {
-    console.log("opening chatbox for the friend");
-    console.log(JSON.stringify(this.friend));
     this.chat.init(this.friend.id, this.friend.displayName, this.friend.photoUrl);
     this.friend.typing = false;
     this.scrollToBottom();
@@ -58,8 +49,7 @@ export class ChatBoxComponent implements OnInit {
     this.scrollToBottom();
   }
   setFocus(focus:boolean){
-    console.log("set focus:", focus);
-    this.chat.windowHasFocus = focus;
+ 
   }
   scrollToBottom(): void {
     try {
@@ -67,7 +57,6 @@ export class ChatBoxComponent implements OnInit {
     } catch (err) { }
   }
   hide() {
-    console.log("chatbox hide");
     this.show = false;
     this.destroy.emit(true);
   }

@@ -6,6 +6,7 @@ import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 import { RouterModule } from '@angular/router';
 import {MomentModule} from 'angular2-moment';
 import { PushNotificationsModule } from 'angular2-notifications';
+import { LinkyModule } from 'angular2-linky';
 
 import { AppComponent } from './app.component';
 import { TopNavComponent } from './layout/top-nav/top-nav.component';
@@ -19,7 +20,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DashboardService } from './dashboard/dashboard.service';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { ChatBoxService } from './chat-box/chat-box.service';
-
+import { WindowRefService } from './chat-box/window-ref.service';
+import { TitleService } from './title/title.service';
 const myFirebaseAuthConfig = {
   provider: AuthProviders.Google,
   method: AuthMethods.Redirect
@@ -55,9 +57,10 @@ const routesModule = RouterModule.forRoot([
     AngularFireModule.initializeApp(firebaseConfig, myFirebaseAuthConfig),
     HttpModule,
     MomentModule,
-    PushNotificationsModule
+    PushNotificationsModule,
+    LinkyModule
   ],
-  providers: [AuthGuard, AuthService, UserService, ChatBoxService, DashboardService, UnauthGuard],
+  providers: [AuthGuard, AuthService, UserService, ChatBoxService, DashboardService, UnauthGuard,  { provide: "windowObject", useValue: window}, WindowRefService, TitleService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

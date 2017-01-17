@@ -5,21 +5,22 @@ import { AuthService } from '../security/auth.service';
 import * as firebase from 'firebase'
 import { PushNotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Rx';
+import { WindowRefService } from './window-ref.service';
+import { TitleService } from '../title/title.service';
 
 @Injectable()
 export class ChatBoxService {
   private uid: string = null;
   private friends = null
   public toUid: string = null;
-  public messages: any[] = null;
+  public messages: any[] = [];
   public messageKey: string = null;
   public users: any = {};
   public messagesRef: FirebaseListObservable<any[]> = null;
   private friendRef: FirebaseObjectObservable<any> = null;
   private notify;
-  public windowHasFocus: boolean = false;
-
-  constructor(private af: AngularFire, private auth: AuthService, private push: PushNotificationsService) {
+  
+  constructor(private af: AngularFire, private auth: AuthService, private push: PushNotificationsService, private windowRef: WindowRefService, private ts: TitleService) {
   }
 
   public init(toUid: string, displayName: string, photoUrl: string) {
@@ -34,21 +35,31 @@ export class ChatBoxService {
       {
         query: {
           orderByChild: 'time',
-          limitToLast:50
+          limitToLast: 10
         }
       }
     );
-    this.messagesRef.subscribe(messages => {
-      this.messages = messages;
 
-      console.log("this.windowHasFocus", this.windowHasFocus);
-
-      if (messages[messages.length - 1].from != this.uid) {
-        this.push.create(displayName, { body: 'sent you a new message' }).subscribe(
-          res => { console.log("in push notifications"); console.log(res) },
-          err => console.log(err)
-        )
+    this.messagesRef.$ref.on('child_added', msg => {
+      console.log('child_added');
+      console.log(msg.val());
+      const newMsg = msg.val();
+      if (!this.messages) {
+        this.messages = [];
       }
+      if (newMsg.from != this.uid) {
+        if (!this.windowRef.hasFocus) {
+          this.ts.setTitle(newMsg.message).marquee();
+        }
+        // this.push.create(displayName, { body: 'sent you a new message' }).subscribe(
+        //   res => { console.log("in push notifications"); console.log(res) },
+        //   err => console.log(err)
+        // )
+      }
+      this.messages.push(newMsg);
+    })
+    this.messagesRef.first().subscribe(messages => {
+      this.messages = messages;
     })
     this.friendRef = this.af.database.object(`friends/${this.toUid}/${this.uid}`);
   }
