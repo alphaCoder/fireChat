@@ -15,6 +15,7 @@ export class ChatBoxComponent implements OnInit {
   @Input("show") show: boolean = true;
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   @Output() destroy: EventEmitter<boolean> = new EventEmitter<boolean>(true);
+  private friendUser:any = null;
   private friendTypingRef : FirebaseObjectObservable<any> = null;
   
   constructor(private chat: ChatBoxService, private elementRef: ElementRef, private auth:AuthService, private af:AngularFire) {
@@ -31,14 +32,20 @@ export class ChatBoxComponent implements OnInit {
           this.chat.setTyping(true)
         }
       });
+
+
     
   }
 
   ngOnInit() {
-    this.chat.init(this.friend.id, this.friend.displayName, this.friend.photoUrl);
     this.friend.typing = false;
     this.scrollToBottom();
     this.show = true
+    this.af.database.object(`Users/${this.friend.id}`).subscribe(frnd =>{
+      console.log('friend----', frnd);
+      this.friendUser = frnd;
+    this.chat.init(this.friendUser.id, this.friendUser.displayName, this.friendUser.photoUrl);
+    })
     this.friendTypingRef = this.af.database.object(`friends/${this.auth.id}/${this.friend.id}/typing`);
     this.friendTypingRef.subscribe(val =>{
       this.friend.typing = val.$value;
@@ -49,7 +56,7 @@ export class ChatBoxComponent implements OnInit {
     this.scrollToBottom();
   }
   setFocus(focus:boolean){
- 
+    this.chat.read();
   }
   scrollToBottom(): void {
     try {

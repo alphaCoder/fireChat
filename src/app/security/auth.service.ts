@@ -25,9 +25,6 @@ export class AuthService {
         let presenseRef = af.database.list('presence');
         presenseRef.$ref.ref.child(`${state.uid}/status`).set(Status.Online)
         
-        af.database.object(`presence/${state.uid}/status`).subscribe(val =>{
-          console.log("user presence changed:", val);
-        });
         let pp = af.database.object(`presence/${state.uid}/status`);
         pp.$ref.onDisconnect().set(Status.Offline);
         let sessionRef = af.database.list(`presence/${state.uid}/session`);

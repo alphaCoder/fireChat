@@ -1,27 +1,26 @@
 <div class="col-sm-4">
-<div class="popup-box">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      Friends
-    </div>
-    <div class="panel-body">
-      <ul *ngFor="let friend of dashboard.friends" class="list-unstyled">
-        <li><a href="javascript:void(0)" (click)="selectedFriend = friend">{{friend.displayName}}</a>
-        <img src="../assets/status_online.png"  *ngIf="friend.status == 0">
-        <img src="../assets/status_offline.png"  *ngIf="friend.status != 0">
-        </li>
-      </ul>
-    </div>
-    <div class="panel-footer">
-      <div class="input-group">
-        <input type="text" class="form-control" [(ngModel)] ="email" placeholder="Invite new gmail user email" />
-        <span class="input-group-addon" (click)="inviteUser()" ><i class="glyphicon glyphicon-send"></i></span>
+  <div class="popup-box">
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix">
+        <!--<h4 class="panel-title pull-left">Friends </h4>-->
+        <div class="input-group">
+          <input type="text" class="form-control" [(ngModel)]="email" placeholder="Invite new gmail user email" />
+          <span class="input-group-addon" (click)="inviteUser()"><i class="glyphicon glyphicon-send"></i></span>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <ul *ngFor="let friend of dashboard.friends" class="list-unstyled">
+          <li><a href="javascript:void(0)" (click)="selectedFriend = friend">{{friend.displayName}}</a>
+            <img src="../assets/status_online.png" *ngIf="friend.status == 0">
+            <img src="../assets/status_offline.png" *ngIf="friend.status != 0">
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </div>
-</div>
 
 <div *ngIf="selectedFriend">
-    <chat-box  [friend] = "selectedFriend" (destroy)="onDestroy($event)"></chat-box>
+  <chat-box [friend]="selectedFriend" (destroy)="onDestroy($event)"></chat-box>
 </div>

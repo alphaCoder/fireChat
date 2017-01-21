@@ -11,15 +11,19 @@ import { TitleService } from './title/title.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private auth : AuthService, private user:UserService, private pushService:PushNotificationsService, private windowRef:WindowRefService, private title:TitleService) {
+  constructor(private auth: AuthService, private user: UserService, private pushService: PushNotificationsService, private windowRef: WindowRefService, private title: TitleService) {
     this.pushService.requestPermission()
-  //  user.attemptAutoLogin();
-  windowRef.isActive.subscribe(focus =>{
-    console.log("is window is currently active:",focus);
-    if(focus) {
-      console.log("disabling animation");
-      title.Off();
-    }
-  })
+    //  user.attemptAutoLogin();
+    windowRef.isActive.subscribe(focus => {
+      console.log("is window is currently active:", focus);
+      if (focus) {
+        console.log("disabling animation");
+        title.Off();
+      }
+    })
+  }
+
+  public login() {
+    this.user.login();
   }
 }

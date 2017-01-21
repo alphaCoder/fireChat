@@ -1,6 +1,36 @@
 <div>
-  <app-top-nav *ngIf="auth.authenticated"></app-top-nav>
-  <div class="container">
+  <!--<app-top-nav *ngIf="auth.authenticated"></app-top-nav>-->
+  <div>
+    <nav id="mainNav" class="navbar navbar-fixed-top" [ngClass]="{'navbar-default': !auth || !auth.authenticated, 'navbar-inverse': auth.authenticated}">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand">Fire Chat</a>
+        </div>
+        <app-top-nav *ngIf="auth.authenticated"></app-top-nav>
+      </div>
+    </nav>
+
+    
+  </div>
+  <div xclass="container">
     <router-outlet></router-outlet>
   </div>
+
+  <!--<footer class="footer">
+      <div class="container">
+        <p>Made with &hearts; Alpha Coder 2017</p>
+        <ul class="list-inline">
+          <li>
+            <a href="#">Privacy</a>
+          </li>
+          <li>
+            <a href="#">Terms</a>
+          </li>
+          <li>
+            <a href="#">FAQ</a>
+          </li>
+        </ul>
+      </div>
+    </footer>-->
 </div>

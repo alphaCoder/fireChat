@@ -24,7 +24,7 @@ import { WindowRefService } from './chat-box/window-ref.service';
 import { TitleService } from './title/title.service';
 const myFirebaseAuthConfig = {
   provider: AuthProviders.Google,
-  method: AuthMethods.Redirect
+  method: AuthMethods.Popup
 }
 
 var firebaseConfig = {
@@ -35,8 +35,8 @@ var firebaseConfig = {
 };
 
 const routesModule = RouterModule.forRoot([
-  { path: 'login', component: LoginComponent, pathMatch: 'full', canActivate: [UnauthGuard] },
   { path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent, pathMatch: 'full', canActivate: [UnauthGuard] },
   { path: '', redirectTo:'dashboard', pathMatch: 'full', canActivate: [AuthGuard] }
   
   /* define app module routes here, e.g., to lazily load a module

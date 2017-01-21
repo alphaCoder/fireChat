@@ -1,9 +1,8 @@
-<div class="popup-box chat-popup" [ngClass]="{'popup-box-on': show}" >
+<div class="popup-box chat-popup" [ngClass]="{'popup-box-on': show}">
   <div class="popup-head">
-    <div class="popup-head-left pull-left">
-      <img [src]="friend.photoUrl" [alt]="friend.displayName"> 
-      {{friend.displayName}}
-      </div>
+    <div class="popup-head-left pull-left" *ngIf="friendUser">
+      <img [src]="friendUser.photoUrl" [alt]="friend.displayName"> {{friendUser.displayName}}
+    </div>
     <div class="popup-head-right pull-right">
       <button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button" (click)="hide()">X</button>
     </div>
@@ -14,7 +13,7 @@
         <abbr class="timestamp">October 8th, 2015</abbr>
       </div>
       <!-- Message. Default to the left -->
-      <div class="xdirect-chat-msg" *ngFor="let message of chat.messages">
+      <div class="xdirect-chat-msg" *ngFor="let message of chat.messages; let i = index">
         <div class="direct-chat-info clearfix">
           <span class="direct-chat-name pull-left">{{chat.users[message.from].displayName}}</span>
         </div>
@@ -22,15 +21,20 @@
         <img alt="message user image" [src]="chat.users[message.from].photoUrl" class="direct-chat-img">
         <!-- /.direct-chat-img -->
         <div class="direct-chat-text">
-        <span [innerHTML]= "message.message | linky"></span>
+          <span [innerHTML]="message.message | linky"></span>
         </div>
-        <div class="direct-chat-info clearfix">
-          <span class="direct-chat-timestamp pull-right">{{message.time| date:'yyyy-MM-dd HH:mm:ss Z' | amTimeAgo}}</span>
+        <div class="direct-chat-info clearfix" *ngIf="chat.messages.length-1 == i">
+          <span class="direct-chat-timestamp pull-right">
+          <span *ngIf="!message.read && chat.messages[chat.messages.length-1].to == friend.id" style="color:white">Delivered</span>
+          <span *ngIf="message.read && message.from != friend.id" style="color:white">Read</span>
+          <span *ngIf="!message.read || chat.messages[chat.messages.length-1].from == friend.id"> {{message.time| date:'yyyy-MM-dd HH:mm:ss Z' | amTimeAgo}}</span>
+          <span *ngIf="message.read && chat.messages[chat.messages.length-1].to == friend.id"> {{message.readAt |date:'yyyy-MM-dd HH:mm:ss Z' | amTimeAgo}}</span>
+          </span>
         </div>
         <!-- /.direct-chat-text -->
       </div>
       <!-- /.d2irect-chat-msg -->
-      
+
     </div>
   </div>
   <div class="popup-messages-footer">
@@ -39,10 +43,11 @@
       {{friend.displayName}} is typing
     </div>
     <div class="input-group">
-        <input type="text" class="form-control" [(ngModel)] ="message" (blur)="setFocus(false)" (focus) = "setFocus(true)" placeholder="Type a message" (keyup.enter)="send()"/>
-        <span class="input-group-addon" (click)="send()" style="cursor:pointer" ><i class="glyphicon glyphicon-send"></i></span>
+      <input type="text" class="form-control" [(ngModel)]="message" (blur)="setFocus(false)" (focus)="setFocus(true)" placeholder="Type a message"
+        (keyup.enter)="send()" />
+      <span class="input-group-addon" (click)="send()" style="cursor:pointer"><i class="glyphicon glyphicon-send"></i></span>
     </div>
-    
+
     <!--<div class="btn-footer">
       <button class="bg_none"><i class="glyphicon glyphicon-film"></i> </button>
       <button class="bg_none"><i class="glyphicon glyphicon-camera"></i> </button>

@@ -14,12 +14,15 @@ export class TitleService {
     }
     public marquee() {
         this.mTimeInterval = setInterval(() => {
-            document.title = this.title.substring(this.counter, this.title.length) + " " + this.title.substring(0, this.counter);
+            if(this.title) {
+                document.title = this.title.substring(this.counter, this.title.length) + " " + this.title.substring(0, this.counter);
+         
             this.counter++;
 
             if (this.counter > this.title.length) {
                 this.counter = 0;
             }
+        }
         }, 200);
     }
 

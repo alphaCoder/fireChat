@@ -1,3 +1,26 @@
- <div>
+ <!--<div>
      <button (click)="login()">Login With Google</button>
- </div>
+ </div>-->
+
+<header *ngIf="auth && !auth.authenticated">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-7">
+            <div class="header-content">
+              <div class="header-content-inner">
+                <h1>Fire Chat is an awesome real time chat application built using Google's Firebase</h1>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="device-container ">
+              <div class="">
+                <a class="btn btn-block btn-social btn-google page-scroll" (click)="login()">
+                  <span class="fa fa-google"></span> Sign in with Google
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
