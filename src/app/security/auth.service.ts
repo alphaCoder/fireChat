@@ -15,12 +15,14 @@ export class AuthService {
   constructor(public auth$: FirebaseAuth, private router: Router, private af: AngularFire) {
     
     auth$.subscribe((state: FirebaseAuthState) => {
-      
-      console.log('auth state', state);
+      // console.log("auth token", state.auth.getToken());
+      // console.log('auth state', state);
       this.authState = state;
       if (this.authState) {
         let userRef = af.database.list('Users')
-        console.log("token:", state.auth.getToken());
+         state.auth.getToken().then(x=>{
+           console.log("token:", x);
+        });
         userRef.$ref.ref.child(`${state.uid}`).set({ "id": state.uid, "displayName": state.google.displayName, "email": state.google.email, "photoUrl": state.google.photoURL });
         let presenseRef = af.database.list('presence');
         presenseRef.$ref.ref.child(`${state.uid}/status`).set(Status.Online)

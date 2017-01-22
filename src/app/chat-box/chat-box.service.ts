@@ -33,7 +33,7 @@ export class ChatBoxService {
     this.users[this.toUid] = { displayName: displayName, photoUrl: photoUrl };
     this.messageKey = (this.uid.localeCompare(this.toUid) == -1) ? (this.uid + ':' + this.toUid) : (this.toUid + ':' + this.uid);
     var self = this;
-
+    
     this.messagesRef = this.af.database.list(`messages/${this.messageKey}`,
       {
         query: {

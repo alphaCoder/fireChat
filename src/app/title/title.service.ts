@@ -27,7 +27,7 @@ export class TitleService {
     }
 
     public Off() {
-        this.title = 'FireChat';
+        this.title = 'devFireChat';
         document.title = this.title;
         if (this.mTimeInterval) {
             clearInterval(this.mTimeInterval);
