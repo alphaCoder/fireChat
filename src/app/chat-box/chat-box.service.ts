@@ -18,7 +18,6 @@ export class ChatBoxService {
   public users: any = {};
   public messagesRef: FirebaseListObservable<any[]> = null;
   private friendRef: FirebaseObjectObservable<any> = null;
-  //private readRef: FirebaseObjectObservable<any> = null;
   private lastReadAt: any = null;
   private notify;
   private lastAddedMsg:Message = null;
@@ -42,14 +41,7 @@ export class ChatBoxService {
         }
       }
     );
-    this.windowRef.isActive.subscribe(focus => {
-      // if (!focus) {
-      //   this.lastReadAt = null;
-      //   this.readRef.set({ 'read': 0, 'readAt': null })
-      // }
-    })
-
-
+   
     this.af.database.list(`messages/${this.messageKey}`).$ref.limitToLast(1).on('child_added', msg => {
       console.log('child_added');
       this.lastAddedMsg = msg.val();
@@ -62,7 +54,7 @@ export class ChatBoxService {
       }
       if (newMsg.from != this.uid) {
         if (!this.windowRef.hasFocus) {
-          this.ts.setTitle(newMsg.message).marquee();
+          this.ts.setTitle("(1)");
         }
         if (!this.windowRef.hasFocus) {
           this.push.create(displayName, { body: 'sent you a new message' }).subscribe(
@@ -83,13 +75,6 @@ export class ChatBoxService {
       console.log("lisiting to child_changed", msg.val(), this.messages.indexOf(msg.val()));
       this.messages[this.messages.length-1].read = msg.val().read;
       this.messages[this.messages.length-1].readAt = msg.val().readAt;
-      //  this.messages.filter(x=>x.time == msg.val().time).map(x=>{
-      //   console.log("inside filter", x);
-
-      //   const m:Message = msg.val();
-      //   this.messages[this.messages.indexOf(x)].read = m.read;
-      //   this.messages[this.messages.indexOf(x)].readAt = m.readAt
-      // });
     })
   }
 
@@ -101,7 +86,6 @@ export class ChatBoxService {
       this.af.database.object(lastkey+'/'+'read').set(true);
       this.af.database.object(lastkey+'/'+'readAt').set(firebase.database.ServerValue.TIMESTAMP);
     }
-    // this.readRef.set({'read': 1, 'readAt': firebase.database.ServerValue.TIMESTAMP})
   }
   public send(message: string) {
     let msg = new Message();

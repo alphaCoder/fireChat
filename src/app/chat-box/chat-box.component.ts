@@ -15,11 +15,11 @@ export class ChatBoxComponent implements OnInit {
   @Input("show") show: boolean = true;
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   @Output() destroy: EventEmitter<boolean> = new EventEmitter<boolean>(true);
-  private friendUser:any = null;
-  private friendTypingRef : FirebaseObjectObservable<any> = null;
-  
-  constructor(private chat: ChatBoxService, private elementRef: ElementRef, private auth:AuthService, private af:AngularFire) {
-    
+  private friendUser: any = null;
+  private friendTypingRef: FirebaseObjectObservable<any> = null;
+
+  constructor(private chat: ChatBoxService, private elementRef: ElementRef, private auth: AuthService, private af: AngularFire) {
+
     Observable.fromEvent(elementRef.nativeElement, 'keyup')
       .map(() => this.message)
       .debounceTime(250)
@@ -32,22 +32,19 @@ export class ChatBoxComponent implements OnInit {
           this.chat.setTyping(true)
         }
       });
-
-
-    
-  }
+ }
 
   ngOnInit() {
     this.friend.typing = false;
     this.scrollToBottom();
     this.show = true
-    this.af.database.object(`Users/${this.friend.id}`).subscribe(frnd =>{
+    this.af.database.object(`Users/${this.friend.id}`).subscribe(frnd => {
       console.log('friend----', frnd);
       this.friendUser = frnd;
-    this.chat.init(this.friendUser.id, this.friendUser.displayName, this.friendUser.photoUrl);
+      this.chat.init(this.friendUser.id, this.friendUser.displayName, this.friendUser.photoUrl);
     })
     this.friendTypingRef = this.af.database.object(`friends/${this.auth.id}/${this.friend.id}/typing`);
-    this.friendTypingRef.subscribe(val =>{
+    this.friendTypingRef.subscribe(val => {
       this.friend.typing = val.$value;
     })
   }
@@ -55,7 +52,7 @@ export class ChatBoxComponent implements OnInit {
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
-  setFocus(focus:boolean){
+  setFocus(focus: boolean) {
     this.chat.read();
   }
   scrollToBottom(): void {
@@ -67,9 +64,9 @@ export class ChatBoxComponent implements OnInit {
     this.show = false;
     this.destroy.emit(true);
   }
- 
+
   send() {
-    
+
     if (this.message.trim().length > 0) {
       this.chat.send(this.message);
       this.chat.setTyping(false);
