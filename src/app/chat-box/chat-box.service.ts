@@ -7,6 +7,9 @@ import { PushNotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Rx';
 import { WindowRefService } from './window-ref.service';
 import { TitleService } from '../title/title.service';
+//declare var moment;
+import * as moment from "moment";
+
 
 @Injectable()
 export class ChatBoxService {
@@ -18,36 +21,50 @@ export class ChatBoxService {
   public users: any = {};
   public messagesRef: FirebaseListObservable<any[]> = null;
   private friendRef: FirebaseObjectObservable<any> = null;
-  private lastReadAt: any = null;
-  private notify;
   private lastAddedMsg:Message = null;
   private lastMsgKey:string = null;
-  constructor(private af: AngularFire, private auth: AuthService, private push: PushNotificationsService, private windowRef: WindowRefService, private ts: TitleService) {
-  }
+  public messageBucket = {};
+  constructor(private af: AngularFire, private auth: AuthService, private push: PushNotificationsService, 
+              private windowRef: WindowRefService, private ts: TitleService) {  }
 
   public init(toUid: string, displayName: string, photoUrl: string) {
     this.uid = this.auth.id;
     this.toUid = toUid;
+   
     this.users[this.uid] = { displayName: this.auth.displayName, photoUrl: this.auth.photoUrl };
     this.users[this.toUid] = { displayName: displayName, photoUrl: photoUrl };
+   
     this.messageKey = (this.uid.localeCompare(this.toUid) == -1) ? (this.uid + ':' + this.toUid) : (this.toUid + ':' + this.uid);
-    var self = this;
-    
-    this.messagesRef = this.af.database.list(`messages/${this.messageKey}`,
+    this.friendRef = this.af.database.object(`friends/${this.toUid}/${this.uid}`);
+   
+    this.messagesRef = this.buildMsgQuery();
+    this.onChildAdded(displayName);
+
+    //this retrieves 10 messages for first time
+    this.messagesRef.first().subscribe(messages => {
+      this.messages = messages;
+      this.buildMessageBucket(messages);
+    })
+    this.onChildChanged();
+  }
+
+  private buildMsgQuery() :FirebaseListObservable<any[]> {
+     return this.af.database.list(`messages/${this.messageKey}`,
       {
         query: {
           orderByChild: 'time',
-          limitToLast: 10
+          limitToLast: 50
         }
       }
     );
-   
+  }
+
+  private onChildAdded(displayName) {
+     //whenever a new message is added a notification sent
     this.af.database.list(`messages/${this.messageKey}`).$ref.limitToLast(1).on('child_added', msg => {
-      console.log('child_added');
       this.lastAddedMsg = msg.val();
       this.lastMsgKey = msg.key;
-      console.log(msg.key);
-      console.log('val', msg.val());
+      
       const newMsg = msg.val();
       if (!this.messages) {
         this.messages = [];
@@ -65,22 +82,36 @@ export class ChatBoxService {
       }
       this.messages.push(newMsg);
     })
-    this.messagesRef.first().subscribe(messages => {
-      this.messages = messages;
-    })
-    this.friendRef = this.af.database.object(`friends/${this.toUid}/${this.uid}`);
-    this.af.database.list(`messages/${this.messageKey}`).$ref.on('child_changed', msg =>{
-      console.log("lisiting to child_changed", msg.val(), this.messages.indexOf(msg.val()));
+  }
+
+  private onChildChanged() {
+      this.af.database.list(`messages/${this.messageKey}`).$ref.on('child_changed', msg =>{
       this.messages[this.messages.length-1].read = msg.val().read;
       this.messages[this.messages.length-1].readAt = msg.val().readAt;
     })
   }
 
+  private buildMessageBucket(messages:any[]) {
+    var obs = Observable.from(messages)
+    .groupBy(x=> moment(x.time).format("MM-DD-YYYY"))
+       .flatMap(group =>
+       {
+          var obj = {};
+          obj["key"] = group.key;
+          obj["values"] = group.reduce((acc, curr) => [...acc, ...curr], []);
+          return Observable.of(obj);
+       });
+       
+    obs.subscribe(gp =>{
+      gp["values"].subscribe(messages =>{
+        this.messageBucket[gp.key] = messages;
+      });
+    })
+  }
+
   public read() {
-    console.log('read');
     if(this.lastMsgKey && this.lastAddedMsg && this.lastAddedMsg.to == this.uid && !this.lastAddedMsg.read) {
       const lastkey = 'messages/' + this.messageKey+ '/' + this.lastMsgKey;
-      console.log('lastkey:',)
       this.af.database.object(lastkey+'/'+'read').set(true);
       this.af.database.object(lastkey+'/'+'readAt').set(firebase.database.ServerValue.TIMESTAMP);
     }

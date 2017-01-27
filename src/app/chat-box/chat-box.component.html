@@ -8,15 +8,15 @@
     </div>
   </div>
   <div class="popup-messages" *ngIf="chat.messages" #scrollMe style="overflow: scroll;overflow-x: hidden; ">
-    <div class="direct-chat-messages">
+    <div class="direct-chat-messages" *ngFor="let key of chat.messageBucket | keys">
       <div class="chat-box-single-line">
-        <abbr class="timestamp">October 8th, 2015</abbr>
+        <abbr class="timestamp">{{key | amCalendar}}</abbr>
       </div>
       <!-- Message. Default to the left -->
       <div >
 
         <ol class="firechat">
-          <li [ngClass]="{'another': message.from == friend.id, 'me': message.from !=friend.id}" *ngFor="let message of chat.messages; let i = index">
+          <li [ngClass]="{'another': message.from == friend.id, 'me': message.from !=friend.id}" *ngFor="let message of chat.messageBucket[key]; let i = index">
             <div class='avatar-icon'>
               <img [src]="chat.users[message.from].photoUrl" >
             </div>

@@ -22,6 +22,9 @@ import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { ChatBoxService } from './chat-box/chat-box.service';
 import { WindowRefService } from './chat-box/window-ref.service';
 import { TitleService } from './title/title.service';
+
+import { KeysPipe } from './shared/keys.pipe';
+
 const myFirebaseAuthConfig = {
   provider: AuthProviders.Google,
   method: AuthMethods.Popup
@@ -48,7 +51,8 @@ const routesModule = RouterModule.forRoot([
   declarations: [
     AppComponent,
     TopNavComponent,
-    LoginComponent, DashboardComponent, ChatBoxComponent
+    LoginComponent, DashboardComponent, ChatBoxComponent,
+    KeysPipe
   ],
   imports: [
     BrowserModule,

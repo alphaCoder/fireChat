@@ -76,7 +76,7 @@ body
     
 }
 .popup-messages .chat-box-single-line {
-    border-bottom: 1px solid #a4c6b5;
+    /*border-bottom: 1px solid #a4c6b5;*/
     height: 12px;
     margin: 7px 0 20px;
     position: relative;
