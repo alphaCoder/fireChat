@@ -67,8 +67,6 @@ export class ChatBoxService {
     })
     this.messagesRef.first().subscribe(messages => {
       this.messages = messages;
-      console.log('messagesRef');
-      console.log(this.messages);
     })
     this.friendRef = this.af.database.object(`friends/${this.toUid}/${this.uid}`);
     this.af.database.list(`messages/${this.messageKey}`).$ref.on('child_changed', msg =>{

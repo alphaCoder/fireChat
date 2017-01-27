@@ -39,7 +39,6 @@ export class ChatBoxComponent implements OnInit {
     this.scrollToBottom();
     this.show = true
     this.af.database.object(`Users/${this.friend.id}`).subscribe(frnd => {
-      console.log('friend----', frnd);
       this.friendUser = frnd;
       this.chat.init(this.friendUser.id, this.friendUser.displayName, this.friendUser.photoUrl);
     })
