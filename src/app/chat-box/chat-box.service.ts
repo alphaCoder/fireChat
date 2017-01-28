@@ -66,8 +66,9 @@ export class ChatBoxService {
       this.lastMsgKey = msg.key;
       
       const newMsg = msg.val();
-      if (!this.messages) {
-        this.messages = [];
+      var mKey = moment(newMsg.time).format("MM-DD-YYYY")
+       if(!this.messageBucket[mKey]) {
+        this.messageBucket[mKey] = [];
       }
       if (newMsg.from != this.uid) {
         if (!this.windowRef.hasFocus) {
@@ -80,7 +81,7 @@ export class ChatBoxService {
           )
         }
       }
-      this.messages.push(newMsg);
+      this.messageBucket[mKey].push(newMsg);
     })
   }
 

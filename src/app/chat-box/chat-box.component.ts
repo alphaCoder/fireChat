@@ -49,7 +49,7 @@ export class ChatBoxComponent implements OnInit {
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    //this.scrollToBottom();
   }
   setFocus(focus: boolean) {
     this.chat.read();
