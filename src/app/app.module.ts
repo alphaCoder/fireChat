@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import {MomentModule} from 'angular2-moment';
 import { PushNotificationsModule } from 'angular2-notifications';
 import { LinkyModule } from 'angular2-linky';
+import { EmojiModule } from 'angular2-emoji';
 
 import { AppComponent } from './app.component';
 import { TopNavComponent } from './layout/top-nav/top-nav.component';
@@ -62,7 +63,8 @@ const routesModule = RouterModule.forRoot([
     HttpModule,
     MomentModule,
     PushNotificationsModule,
-    LinkyModule
+    LinkyModule,
+    EmojiModule
   ],
   providers: [AuthGuard, AuthService, UserService, ChatBoxService, DashboardService, UnauthGuard,  { provide: "windowObject", useValue: window}, WindowRefService, TitleService],
   bootstrap: [AppComponent]

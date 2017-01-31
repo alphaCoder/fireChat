@@ -7,22 +7,20 @@
       <button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button" (click)="hide()"><i class="fa fa-times"></i></button>
     </div>
   </div>
-  <div class="popup-messages" *ngIf="chat.messages" #scrollMe style="overflow: scroll;overflow-x: hidden; ">
+  <div class="popup-messages" *ngIf="chat.messages" #scrollMe style="overflow: scroll;overflow-x: hidden;" id="chat">
     <div class="direct-chat-messages" *ngFor="let key of chat.messageBucket | keys">
       <div class="chat-box-single-line">
         <abbr class="timestamp">{{key | amCalendar}}</abbr>
       </div>
-      <!-- Message. Default to the left -->
-      <div >
-
-        <ol class="firechat">
+      <div>
+       <ol class="firechat">
           <li [ngClass]="{'another': message.from == friend.id, 'me': message.from !=friend.id}" *ngFor="let message of chat.messageBucket[key]; let i = index">
             <div class='avatar-icon'>
               <img [src]="chat.users[message.from].photoUrl" >
             </div>
             <div class='messages'>
               <p><span [innerHTML]="message.message | linky"></span></p>
-              <time>{{chat.users[message.from].displayName}} • {{message.time| date:'yyyy-MM-dd HH:mm:ss Z' | amTimeAgo}}</time>
+              <!--<time>{{chat.users[message.from].displayName}} • {{message.time| date:'yyyy-MM-dd HH:mm:ss Z' | amTimeAgo}}</time>-->
             </div>
           </li>
         </ol>
@@ -54,11 +52,9 @@
     <div *ngIf="friend.typing">
       {{friend.displayName}} is typing
     </div>
-    <div class="input-group">
-      <input type="text" class="form-control" [(ngModel)]="message" (blur)="setFocus(false)" (focus)="setFocus(true)" placeholder="Type a message"
-        (keyup.enter)="send()" />
-      <span class="input-group-addon" (click)="send()" style="cursor:pointer"><i class="glyphicon glyphicon-send"></i></span>
-    </div>
-
+    
+      <!--<textarea type="text" id="message" class="form-control" [(ngModel)]="message" (blur)="setFocus(false)" (focus)="setFocus(true)" placeholder="Type a message"
+        (keyup.enter)="send()" data-emojiable="true"></textarea>-->
+        <emoji-input [popupAnchor]="'top'" [(model)]="message" (blur)="setFocus(false)" (focus)="setFocus(true)" (keyup.enter)="send()" ></emoji-input>
   </div>
 </div>

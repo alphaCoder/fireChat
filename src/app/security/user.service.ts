@@ -12,6 +12,8 @@ export class UserService {
 
     public attemptAutoLogin() {
         this.af.auth.login(AuthProviders.Google).then(user => {
+            console.log("in attemptAutoLogin");
+            console.log(user);
             this.router.navigate(['']);
         }).catch(e => {
             this.router.navigate(['login']);

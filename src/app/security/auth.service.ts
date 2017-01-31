@@ -13,28 +13,29 @@ export class AuthService {
   private authState: FirebaseAuthState = null;
   public user: any = null;
   constructor(public auth$: FirebaseAuth, private router: Router, private af: AngularFire) {
-    
+
     auth$.subscribe((state: FirebaseAuthState) => {
       this.authState = state;
       if (this.authState) {
         let userRef = af.database.list('Users')
-         
-        userRef.$ref.ref.child(`${state.uid}`).set({ "id": state.uid, "displayName": state.google.displayName, "email": state.google.email, "photoUrl": state.google.photoURL });
-     
+        if (state && state.google.displayName) {
+          userRef.$ref.ref.child(`${state.uid}`).set({ "id": state.uid, "displayName": state.google.displayName, "email": state.google.email, "photoUrl": state.google.photoURL });
+        }
         //this will keep track of number of users who logged in currently
         let presenseRef = af.database.list('presence');
         presenseRef.$ref.ref.child(`${state.uid}/status`).set(Status.Online)
-        
+
         let pp = af.database.object(`presence/${state.uid}/status`);
         pp.$ref.onDisconnect().set(Status.Offline);
 
         //this keeps track of users sessions
         let sessionRef = af.database.list(`presence/${state.uid}/session`);
-        sessionRef.push({"loggedInAt" :firebase.database.ServerValue.TIMESTAMP });
+        sessionRef.push({ "loggedInAt": firebase.database.ServerValue.TIMESTAMP });
 
         //this can be replaced with observable/subscribe 
+        var self = this;
         userRef.$ref.ref.child(`${state.uid}`).on('value', function (snapshot) {
-          this.user = snapshot.val();
+          self.user = snapshot.val();
         })
       }
     });
@@ -66,8 +67,8 @@ export class AuthService {
   }
 
   signOut(): void {
-     let presenseRef = this.af.database.list('presence');
-     presenseRef.$ref.ref.child(`${this.authState.uid}/status`).set(Status.Offline)
-     this.auth$.logout();
+    let presenseRef = this.af.database.list('presence');
+    presenseRef.$ref.ref.child(`${this.authState.uid}/status`).set(Status.Offline)
+    this.auth$.logout();
   }
 }
