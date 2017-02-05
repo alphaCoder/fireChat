@@ -8,6 +8,7 @@ import {MomentModule} from 'angular2-moment';
 import { PushNotificationsModule } from 'angular2-notifications';
 import { LinkyModule } from 'angular2-linky';
 import { EmojiModule } from 'angular2-emoji';
+import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 import { AppComponent } from './app.component';
 import { TopNavComponent } from './layout/top-nav/top-nav.component';
@@ -25,7 +26,7 @@ import { WindowRefService } from './chat-box/window-ref.service';
 import { TitleService } from './title/title.service';
 
 import { KeysPipe } from './shared/keys.pipe';
-
+import { InviteUserComponent } from './shared/invite-user.component';
 const myFirebaseAuthConfig = {
   provider: AuthProviders.Google,
   method: AuthMethods.Popup
@@ -52,7 +53,7 @@ const routesModule = RouterModule.forRoot([
   declarations: [
     AppComponent,
     TopNavComponent,
-    LoginComponent, DashboardComponent, ChatBoxComponent,
+    LoginComponent, DashboardComponent, ChatBoxComponent, InviteUserComponent,
     KeysPipe
   ],
   imports: [
@@ -64,7 +65,8 @@ const routesModule = RouterModule.forRoot([
     MomentModule,
     PushNotificationsModule,
     LinkyModule,
-    EmojiModule
+    EmojiModule,
+    Ng2Bs3ModalModule
   ],
   providers: [AuthGuard, AuthService, UserService, ChatBoxService, DashboardService, UnauthGuard,  { provide: "windowObject", useValue: window}, WindowRefService, TitleService],
   bootstrap: [AppComponent]

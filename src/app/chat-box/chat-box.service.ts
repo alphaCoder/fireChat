@@ -70,7 +70,7 @@ export class ChatBoxService {
        if(!this.messageBucket[mKey]) {
         this.messageBucket[mKey] = [];
       }
-      if (newMsg.from != this.uid) {
+      if (newMsg.from != this.uid && !newMsg.read) {
         if (!this.windowRef.hasFocus) {
           this.ts.setTitle("(1)");
         }

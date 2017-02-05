@@ -17,6 +17,8 @@ export class AuthService {
     auth$.subscribe((state: FirebaseAuthState) => {
       this.authState = state;
       if (this.authState) {
+        console.log("auth");
+        console.log(state.auth);
         let userRef = af.database.list('Users')
         if (state && state.google.displayName) {
           userRef.$ref.ref.child(`${state.uid}`).set({ "id": state.uid, "displayName": state.google.displayName, "email": state.google.email, "photoUrl": state.google.photoURL });

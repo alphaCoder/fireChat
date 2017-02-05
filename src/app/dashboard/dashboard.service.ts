@@ -38,6 +38,7 @@ export class DashboardService {
 
   public inviteUser(email: string) {
     //todo: check if the invitation already sent
+    console.log("inviting new user:", email);
     this.friendsInvitationRef.push(email);
   }
 }
