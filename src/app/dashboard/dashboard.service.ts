@@ -11,7 +11,13 @@ export class DashboardService {
   constructor(private af: AngularFire, private auth: AuthService) {
     this.friendsRef = af.database.list(`friends/${auth.id}`);
     this.friendsInvitationRef = af.database.list(`invitations/${auth.id}`);
+    // this.friendsRef.$ref.on('child_changed', (snap)=>{
+    //   console.log('friend child_changed');
+    //   console.log(snap);
+    // })
    let fr$= this.friendsRef.subscribe(friends => {
+     console.log("-------friends-----");
+     console.log(friends);
       this.friends = friends;
       this.friends.forEach(friend => {
        let ps$ =  af.database.object(`presence/${friend.id}/status`).subscribe(val => {
@@ -36,6 +42,26 @@ export class DashboardService {
     })
   }
 
+  public refreshFriends() {
+      let fr$= this.friendsRef.subscribe(friends => {
+     console.log("-------friends-----");
+     console.log(friends);
+      this.friends = friends;
+      this.friends.forEach(friend => {
+       let ps$ =  this.af.database.object(`presence/${friend.id}/status`).subscribe(val => {
+          friend.status = val.$value == null ? 1 : val.$value;
+        });
+        this.pss$.push(ps$);
+      });
+    })
+      this.auth.auth$.subscribe(val=>{
+      if(!val) {
+        console.log("-----------logout unsubscribe----------------");
+        fr$.unsubscribe();
+        this.pss$.forEach((val)=>{ val.unsubscribe()});
+      }
+    })
+  }
   public inviteUser(email: string) {
     //todo: check if the invitation already sent
     console.log("inviting new user:", email);

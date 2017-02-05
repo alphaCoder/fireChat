@@ -41,6 +41,7 @@ var firebaseConfig = {
 
 const routesModule = RouterModule.forRoot([
   { path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+  { path: 'login/:id', component: LoginComponent, pathMatch: 'full', canActivate: [UnauthGuard] },
   { path: 'login', component: LoginComponent, pathMatch: 'full', canActivate: [UnauthGuard] },
   { path: '', redirectTo:'dashboard', pathMatch: 'full', canActivate: [AuthGuard] }
   

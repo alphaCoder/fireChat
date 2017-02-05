@@ -36,11 +36,12 @@ export class InviteUserComponent {
     private name:string = null;
     private email: string = null;
     private friendsInvitationRef: FirebaseListObservable<any[]> = null;
-
+    private friendsRef: FirebaseListObservable<any[]> = null;
     @ViewChild('modal')
     modal: ModalComponent;
     constructor(private af: AngularFire, private auth: AuthService) {
         this.friendsInvitationRef = af.database.list('invitations');
+        this.friendsRef = af.database.list('refers');
     }
 
     cancel() {
@@ -50,12 +51,19 @@ export class InviteUserComponent {
         let user = {
             "Email" : this.email,
             "Name": this.name,
-            "From": this.auth.displayName
+            "From": this.auth.displayName,
+            "RefId": null,
+            "RefBy": this.auth.id
         }
         console.log("name, email:",this.name, this.email )
-        this.friendsInvitationRef.push(user).then((result)=>{
+        this.friendsRef.push(user).then((result) =>{
+            console.log("friendsRef:", result.key);
+            user.RefId = result.key;
+            this.friendsInvitationRef.push(user).then((result)=>{
             this.email = '';
             this.name = '';
         })
+        })
+       
     }
 }

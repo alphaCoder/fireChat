@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFire, FirebaseAuthState } from 'angularfire2';
 import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserService } from './user.service';
 @Component({
   selector: 'login',
@@ -9,12 +9,17 @@ import { UserService } from './user.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  constructor(private auth: AuthService, private router: Router, private user:UserService) {
+  private refId: string = null;
+  constructor(private auth: AuthService, private router: Router, private user:UserService, private route: ActivatedRoute) {
+    this.refId = this.route.snapshot.params['id'];
+    console.log("params id", this.refId);
+    if(!this.refId) {
     this.auth.auth$.subscribe((state: FirebaseAuthState) => {
       if (state) {
         this.router.navigate(['']);
       }
     });
+    }
   }
   ngOnInit() {
     if(this.auth.authenticated) {
@@ -23,6 +28,6 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.user.login();
+    this.user.login(this.refId);
   }
 }
